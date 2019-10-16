@@ -1,0 +1,548 @@
+一、函数
+函数的基础概念：
+　　函数是python为了代码最大程度地重用和最小化代码冗余而提供的基本结构
+　　函数是一种设计工具，它能让程序员将复杂的系统分解为可管理的部件
+　　函数用于将相关功能打包并参数化
+　　在python中可以创建4种函数
+　　　　(1)全局函数：定义在模块
+　　　　(2)局部函数：嵌套于其它函数中
+　　　　(3)lambda函数：表达式，如需多次调用
+　　　　(4)方法：与特定数据类型关联的函数，并且只能与数据类型关联一起使用
+　　python提供了很多内置函数
+
+
+创建函数：
+
+def functionName(arg1,arg2,...):
+　　suite
+   return 
+函数的定义主要有如下要点：
+
+def：表示函数的关键字
+函数名：函数的名称，日后根据函数名调用函数
+函数体：函数中进行一系列的逻辑计算，如：发送邮件、计算出 [11,22,38,888,2]中的最大数等...
+参数：为函数体提供数据
+返回值：当函数执行完毕后，可以给调用者返回数据。
+一些相关的概念：
+　　def是一个可执行语句
+　　　　因此可以出现在任何能够使用语句的地方，甚至可以嵌套于其他语句，例如if或while中
+　　def创建了一个对象并将其赋值给一个变量名(即函数名),函数体则存在内存
+　　return用于返回结果对象，其为可选；无return语句的函数自动返回None对象
+　　　　返回多个值时，彼此间使用逗号分隔，且组合为元组形式返回一个对象
+　　　　函数一旦执行到return,函数就终止了,如果return下面还有执行语句则终止
+　　def语句运行之后，可以在程序中通过函数后附加()进行调用
+
+函数作用域：
+　　python创建、改变或查找变量名都是在名称空间中进行
+　　在代码中变量名被赋值的位置决定了其能被访问到的范围
+　　函数定义了本地作用域，而模块定义了全局作用域
+
+　　　　1.全局变量全部用大写表示
+　　　　2.全局变量都可以被访问,函数内部的变量则为本地作用域
+　　　　3.在函数内如果要修改全局变量,需要global
+　　　　4.特殊:字典,列表可以在函数内修改,但是不能重新赋值
+
+更多作用域
+
+复制代码
+NAME = 'tomcat'
+
+def f1():
+    age = 18
+    global NAME
+    NAME = 'xiao'
+    print(age,NAME)
+
+def f2():
+    age = 27
+    print(age,NAME)
+
+f1()
+f2()
+复制代码
+函数的参数：
+　　默认情况下，参数通过其位置进行传递，从左至右，这意味着，必须精确地传递和函数头部参数一样多的参数
+　　但也可以通过关键字参数、默认参数或参数容器等改变这种机制
+　　　　(1)普通参数：定义函数时从左至右
+　　　　(2)默认参数：定义函数时是使用"name=value"的语法直接给变量一个值，从而传入的值可以少于参数个数
+　　　　(3)指定参数：调用函数时指定"name形式参数=value实际参数"的语法通过参数名进行匹配
+　　　　(4)动态参数：定义函数时形式参数中收集任意多基于普通参数
+　　　　　　定义函数时使用* ：收集普通参数，返回元组,*args
+　　　　　　定义函数时使用**：收集指定参数，返回列表,**kwargs
+　　　　(5)动态参数解包：调用函数时，使用**开头的参数，从而传递任意多基于普通或指定参数
+
+注意：定义函数时
+　　1.混用普通参数和默认参数，应当把默认参数写到右侧
+　　2.混用有默认和无默认值的参数时，无默认值放左侧
+
+ 
+
+1、返回值
+
+函数是一个功能块，该功能到底执行成功与否，需要通过返回值来告知调用者。
+
+以上要点中，比较重要有参数和返回值：
+
+复制代码
+def 发送短信():
+       
+    发送短信的代码...
+   
+    if 发送成功:
+        return True
+    else:
+        return False
+   
+while True:
+       
+    # 每次执行发送短信函数，都会将返回值自动赋值给result
+    # 之后，可以根据result来写日志，或重发等操作
+   
+    result = 发送短信()
+    if result == False:
+        记录日志，短信发送失败...
+复制代码
+2、参数
+
+没有参数的情况
+
+复制代码
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+'''
+1.需要开启邮箱服务sendmail
+2.邮箱服务器需要开启SMTP服务
+'''
+
+def sendmail():
+    try:
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.utils import formataddr
+
+        msg = MIMEText('邮件内容', 'plain', 'utf-8')
+        msg['From'] = formataddr(["发件人", 'pythonxiao@126.com'])
+        msg['To'] = formataddr(["收件人", '329275108@qq.com'])
+        msg['Subject'] = "邮件主题"
+
+        server = smtplib.SMTP("smtp.126.com", 25)
+        server.login("pythonxiao@126.com", "xiaozhiqi2016")
+        server.sendmail('pythonxiao@126.com', ['329275108@qq.com', ], msg.as_string())
+        server.quit()
+    except:
+        return False
+    else:
+        return True
+
+ret = sendmail()
+if ret == True:
+    print("发送成功")
+else:
+    print("发送失败")
+复制代码
+有参数的情况：
+
+复制代码
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+def sendmail(email,content):
+    try:
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.utils import formataddr
+
+        msg = MIMEText(content, 'plain', 'utf-8')
+        msg['From'] = formataddr(["发件人", 'pythonxiao@126.com'])
+        msg['To'] = formataddr(["收件人", '329275108@qq.com'])
+        msg['Subject'] = "邮件主题"
+
+        server = smtplib.SMTP("smtp.126.com", 25)
+        server.login("pythonxiao@126.com", "xiaozhiqi2016")
+        server.sendmail('pythonxiao@126.com', [email, ], msg.as_string())
+        server.quit()
+    except:
+        return "失败"
+    else:
+        return 'cc'
+
+while True:
+    msg = input("请输入邮箱地址:")
+
+    #实际参数
+    ret = sendmail(msg,"SB")
+    if ret == 'cc':
+        print("发送成功")
+        break
+    else:
+        print("发送失败")
+复制代码
+从上面例子可以看出有参数的函数表现的非常灵活可扩展！
+
+函数的有三中不同的参数(定义函数时)：
+
+普通参数
+默认参数
+动态参数
+　　指定参数和动态参数解包是发生在调用函数
+
+
+(1)# xxoo为普通参数也叫形式参数,简称：形参
+def f1(name):
+    print(name)
+
+# 'test' 叫做函数的实际参数,简称：实参
+f1('tomcat')
+
+复制代码
+(2)# name 是普通参数,ab=5是默认参数
+def f1(name,ab=5):
+    print(name,ab)
+
+# 指定参数
+f1('tomcat',12)
+
+# 使用默认参数
+f1('tomcat')
+
+注意：默认参数需要放在参数列表最后
+复制代码
+
+复制代码
+(3)# 动态参数(1):*args 返回的是一个元组
+def f1(*args):
+    print(args,type(args))
+
+# 执行方式一    
+f1(11)
+
+# 如果传入一个列表,则这个列表是当作元组中的一个元素
+li = ['a','b','c']
+f1(li)
+
+# 执行方式二：执行函数时有*,把所有迭代对象拆分为单个元素作为元组的元素,如传入列表,会把列表中每一个元素遍历添加到元组中当作一个元素
+f1(*l1)
+复制代码
+
+复制代码
+(4)#动态参数(2):**kwargs 返回的是一个字典
+def f1(**kwargs):
+    print(args,type(args))
+    
+# 执行方式一：只能传入指定参数    
+f1(n1='alex',n2=18)
+
+dic = {'k1':'v1','k2':'v2'}
+f1(kk=dic)
+
+# 执行方式二：实际参数如果有**,传入的应该是一个字典,会把每一对键值对像不带**一样把指定参数传入函数中
+f1(**dic)
+复制代码
+
+复制代码
+(5)# 俗称万能参数
+def f1(*args,**kwargs):
+    print(args,type(args))
+    print(kwargs,type(kwargs))
+
+# 执行方式一
+f1(11,22,33,k1='v1',k2='v2')
+
+# 执行方式二
+l1 = [1,2,3,4]
+d1 = {'a':'xiao','b':'zhi','c':'qi'}
+f1(*l1,**d1)
+复制代码
+在python中可以经常看到万能参数,比如str.format()用于格式化的方法,这里用不同的参数传递方式实现相同的效果
+
+复制代码
+>>> s1 = 'i am {0}, age {1}'.format('alex',18)
+>>> print(s1)
+i am alex, age 18
+
+>>> s2 = 'i am {0}, age {1}'.format(*['alex',18])
+>>> print(s2)
+i am alex, age 18
+
+>>> s3 = 'i am {0}, age {1}'.format(*('alex',18))
+>>> print(s3)
+i am alex, age 18
+
+>>> s4 = 'i am {name}, age {age}'.format(name='alex',age=18)
+>>> print(s4)
+i am alex, age 18
+
+>>> dic = {'name':'alex','age':18}
+>>> s5 = 'i am {name}, age {age}'.format(**dic)
+>>> print(s5)
+i am alex, age 18
+复制代码
+3.补充：
+
+(1).在定义相同函数时,后一个函数名会指向新的内存对象,函数名是函数体在内存中的引用,就像变量赋值一样,变量名是对对象在内存中的引用
+
+复制代码
+def f1(a,b):
+    return a + b
+
+def f1(a,b):
+    return a * b
+
+ret = f1(8,8)
+print(ret)
+复制代码
+(2).函数在传递参数的时候是内存中的引用,而不是复制,所以l1的值是[1,2,3,4,999]
+
+复制代码
+def f1(a1):
+    a1.append(999)
+
+l1 = [1,2,3,4]
+f1(l1)
+
+print(l1)
+复制代码
+ 稍微改变下,用一个变量来接收函数的返回值,这里的l1的值不是[1,2,3,4,999],而是None,因为函数内并没有定义返回值,所以为None
+
+复制代码
+def f1(a1):
+    a1.append(999)
+
+l1 = [1,2,3,4]
+l1 = f1(l1)
+
+print(l1)
+复制代码
+ 
+
+函数式编程：
+
+以后写函数按照下面这个例子来编写,规范,这是一个登录注册的函数编程
+
+1.函数与函数间隔2行
+
+2.函数需要注释,便于记忆
+
+3.函数名需要见名知意
+
+ db文件格式
+
+ db
+ 代码
+
+复制代码
+#!/usr/bin/env python
+# coding: utf8
+
+
+def datainput():
+    username = input("input your username:")
+    password = input("input your password:")
+    return username,password
+
+
+def login(username,password):
+    f = open('db','r')
+    for line in f:
+        data = line.strip().split('|')
+        if data[0] == username and data[1] == password:
+            return True
+    return False
+
+
+def register(username,password):
+    f = open('db','r')
+    for line in f:
+        user = line.strip().split('|')
+        #print(user)
+        if username in user:
+            return False
+    else:
+        f = open('db','a')
+        userdata = "\n" + username + "|" + password
+        f.write(userdata)
+        f.close()
+        return True
+
+
+def main():
+    num  = input("1.登录，2.注册：")
+    if int(num) == 1:
+        data = datainput()
+        result = login(data[0],data[1])
+        if result:
+            print('登录成功')
+        else:
+            print('登录失败')
+    elif int(num) == 2:
+        data = datainput()
+        ret = register(data[0],data[1])
+        if ret:
+            print("注册成功")
+        else:
+            print("注册失败,用户已存在")
+
+
+main()
+复制代码
+二、三元运算符　　
+　　三元表达式,三元运算,三目运算符都是指同一个意思：可以简化条件语句的缩写，可以使代码看起来更加简洁，三目可以简单的理解为有三个变量，它的形式是这样的 name= k1 if 条件 else k2 ，如果条件成立，则 name=k1，否则name=k2，下面从代码里面来加深一下理解，从下面的代码明显可以看出三目运算符可以使代码更加简洁。
+
+复制代码
+a=1
+b=2
+if a<b:                     #一般条件语句的写法
+    k=a
+else:
+    k=b
+     
+c=a if a<b else b      　　 #三目运算符的写法,如果a<b为True,则c=a,否则c=b
+复制代码
+ 
+
+三、lambda表达式
+对于简单的函数，也存在一种简便的表示方式，即：lambda表达式
+
+复制代码
+# ###################### 普通函数 ######################
+# 定义函数（普通方式）
+def func(arg):
+    return arg + 1
+    
+# 执行函数
+result = func(123)
+    
+# ###################### lambda ######################
+    
+# 定义函数（lambda表达式）
+my_lambda = lambda arg : arg + 1
+    
+# 执行函数
+result = my_lambda(123)
+复制代码
+ lambda表达式会自动return返回值,条件为真返回True,条件为假返回False.
+
+ 
+
+四、递归
+　　如果一个函数在其内部调用它自己，就叫做递归，但是递归的时候要设置一个退出递归的条件，不然会一直递归下去，变成一个死循环。从另一个方面来说，递归其实和循环其实是等价的。想要明白递归的话，我们先从实际的例子上来说明这一点，比如说我们要写一个阶乘函数 f(n)算出n的阶乘，阶乘函数实现的方法很多，下面讲如何用递归实现
+
+复制代码
+def f(n):
+    if 0==n:                　　# n=0 的话直接返回空，对用户输入的零进行判断
+        return None
+    elif 1==n:              　　# n=1 的话就不再递归
+        return n
+    else:
+        return n*f(n-1)    　　# 递归在执行f(n-1) 直到f（1）
+print(f(5))                　　# 120
+'''
+    f(5)的执行过程如下
+        ===> f(5)
+        ===> 5 * f(4)
+        ===> 5 * (4 * f(3))
+        ===> 5 * (4 * (3 * f(2)))
+        ===> 5 * (4 * (3 * (2 * f(1))))
+        ===> 5 * (4 * (3 * (2 * 1)))
+        ===> 5 * (4 * (3 * 2))
+        ===> 5 * (4 * 6)
+        ===> 5 * 24
+        ===> 120
+'''
+复制代码
+再来一个例子：
+
+复制代码
+def func(n):
+    n += 1
+    if n >= 4:
+        return 'end'
+    return func(n)
+
+r = func(4)
+print(r)
+
+end  #这是执行结果
+复制代码
+下面的图帮助理解
+
+
+
+传入1的时候，n=2不满足n>=4这个条件，return func(2)
+
+传入2的时候，n=3不满足n>=4这个条件，return func(3)
+
+传入3的时候，n=4满足n>=4这个条件，return end
+
+return end --> return func(3) --> return func(2) --> r = func(1) 所以r的返回值就是end
+
+ 
+
+练习：
+1、写函数，计算传入字符串中【数字】、【字母】、【空格] 以及 【其他】的个数　
+复制代码
+def fun(s):
+    digitnum, alphanum, sapcenum, othernum=0,0,0,0
+    for i in s:
+        if i.isdigit():
+            digitnum+=1
+        elif i.isalpha():
+            alphanum+=1
+        elif i.isspace():
+            sapcenum+=1
+        else:
+            othernum+=1
+    return (digitnum,alphanum,sapcenum,othernum)
+复制代码
+2、写函数，判断用户传入的对象（字符串、列表、元组）长度是否大于5　　
+def fun(s):
+    ret=False
+    if isinstance(s,str) or isinstance(s,str) or isinstance(s,tuple):
+       if len(s)>5:
+           ret=True
+    return ret
+3、写函数，检查用户传入的对象（字符串、列表、元组）的每一个元素是否含有空内容
+复制代码
+def fun(s):
+    ret=False
+    if isinstance(s, str) or isinstance(s, str) or isinstance(s, tuple):
+        for i in s:
+           if i=='':
+               ret=True
+               break
+    return ret
+复制代码
+4、写函数，检查传入列表的长度，如果大于2，那么仅保留前两个长度的内容，并将新内容返回给调用者。
+def fun(s):
+    if isinstance(s,list):
+        if len(s)>2:
+            return s[0:2]
+    return None
+5、写函数，检查获取传入列表或元组对象的所有奇数位索引对应的元素，并将其作为新列表返回给调用者。
+复制代码
+def fun(s):
+    if isinstance(s,list) or isinstance(s,tuple):
+        l=[]
+        for i in range(1,len(s),2):
+            l.append(s[i])
+        return l
+    return None
+复制代码
+6、写函数，检查传入字典的每一个value的长度,如果大于2，那么仅保留前两个长度的内容，并将新内容返回给调用者。
+def fun(s):
+    if isinstance(s,dict):
+        for i in s:
+            if len(s[i])>2:
+                s[i]=s[i][0:2]
+    return s
+7、写函数，利用递归获取斐波那契数列中的第 10 个数，并将该值返回给调用者。
+复制代码
+def fun(n):
+    if 1==n :
+        return 0
+    elif 2==n:
+        return 1
+    else:
+        return fun(n-1)+fun(n-2)
+复制代码
