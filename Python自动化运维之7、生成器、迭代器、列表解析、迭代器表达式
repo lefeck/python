@@ -1,0 +1,244 @@
+迭代器和生成器
+
+1、迭代器
+迭代器是访问集合元素的一种方式。迭代器对象从集合的第一个元素开始访问，直到所有的元素被访问完结束。迭代器只能往前不会后退，不过这也没什么，因为人们很少在迭代途中往后退。另外，迭代器的一大优点是不要求事先准备好整个迭代过程中所有的元素。迭代器仅仅在迭代到某个元素时才计算该元素，而在这之前或之后，元素可以不存在或者被销毁。这个特点使得它特别适合用于遍历一些巨大的或是无限的集合，比如几个G的文件
+
+特点：
+
+访问者不需要关心迭代器内部的结构，仅需通过next()方法不断去取下一个内容
+不能随机访问集合中的某个值 ，只能从头到尾依次访问
+访问到一半时不能往回退
+便于循环比较大的数据集合，节省内存
+next()就相当于调用__next__()，for也是
+iterable(可迭代)对象
+支持每次返回自己所包含的一个成员的对象
+对象实现了__iter__方法
+　　(1)序列类型，如 str,list,tuple,set
+　　(2)非序列类型，如 dict, file
+　　(3)用户自定义的一些包含了__iter__()或__getitem__()方法的类
+
+for循环可用于任何可迭代对象
+　　for循环开始时，会通过迭代协议传递给iter()内置函数，从而能够从可迭代对象中获得一个迭代器，返回的对象含有需要的next()方法
+
+>>> a = iter([1,2,3,4,5])
+>>> a
+<list_iterator object at 0x101402630>
+>>> a.__next__()
+1
+>>> a.__next__()
+2
+>>> a.__next__()
+3
+>>> a.__next__()
+4
+>>> a.__next__()
+5
+>>> a.__next__()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+
+或者
+
+>>> l1 = [1,2,3,4,5]
+>>> l2 = l1.__iter__()
+>>> type(l2)
+<class 'list_iterator'>
+
+>>> next(l2)
+1
+>>> next(l2)
+2
+>>> next(l2)
+3
+>>> next(l2)
+4
+>>> next(l2)
+5
+>>> next(l2)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+
+2、生成器
+一个函数调用时返回一个迭代器，那这个函数就叫做生成器（generator）；如果函数中包含yield语法，那这个函数就会变成生成器；能够用next()调用或for循环使用
+
+def func():
+    yield 1
+    yield 2
+    yield 3
+    yield 4
+上述代码中：func是函数称为生成器，当执行此函数func()时会得到一个迭代器。
+
+
+>>> temp = func()
+>>> temp.__next__()
+1
+>>> temp.__next__()
+2
+>>> temp.__next__()
+3
+>>> temp.__next__()
+4
+>>> temp.__next__()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+
+一些例子：
+
+
+#示例：使用yield函数生成器，能够用next()调用或for循环使用
+>>> def genNum(x):
+   ....:     y = 0
+   ....:     while y <= x:
+   ....:         yield y
+   ....:         y += 1
+   ....:         
+
+>>> g1 = genNum(5)
+
+>>> next(g1)
+0
+
+>>> for i in g1:
+   ....:     print i
+   ....:     
+1
+2
+3
+4
+5
+
+#示例：求1到10的平方，可以使用列表解析或者生成器，也可以是用yield
+>>> def genNum(n):
+   ....:     i = 1
+   ....:     while i <= 10:
+   ....:         yield i ** 2
+   ....:         i += 1
+   ....:         
+
+>>> g1 = genNum(5)
+
+>>> for i in g1:
+   ....:     print i
+   ....:     
+1
+4
+9
+16
+25
+36
+49
+64
+81
+100
+
+利用生成器自定义range
+
+ def nrange(num):
+    temp = -1
+    while True:
+        temp = temp + 1
+        if temp >= num:
+            return
+        else:
+            yield temp
+
+列表解析和生成器表达式:
+列表解析
+列表解析是python迭代机制的一种应用，它常用于实现创建新的列表，因此要放置于[]中
+
+语法：
+[expression for iter_var in iterable]	
+[expression for iter_var in iterable if condition_expression]
+
+示例1：        
+>>> l1 = [1,2,3,4,5]
+
+>>> l2 = [x ** 2 for x in l1]
+
+>>> print(l2)
+[1, 4, 9, 16, 25]
+
+示例2：      
+>>> l3 = [ x ** 2 for x in l1 if x >= 3 ]
+
+>>> print(l3)
+[9, 16, 25]
+    
+示例3：        
+>>> l5 = [ (i ** 2)/2 for i in range(1,11) ]
+
+>>> print(l5)
+[0, 2, 4, 8, 12, 18, 24, 32, 40, 50]
+    
+    
+示例4：        
+>>> import os
+>>> help(os.listdir)
+
+>>> filelist1 = os.listdir('/var/log/')
+
+>>> s1 = 'hello.log'
+
+>>> s1.endswith('.log')
+>>> True
+
+>>> s2 = 'hello'
+
+>>> s2.endswith('.log')
+>>> False
+
+>>> help(str.endswith)
+>>> filelist2 = [ i for i in filelist1 if i.endswith('.log') ]
+
+>>> print(filelist2)
+['yum.log', 'anaconda.yum.log', 'dracut.log', 'anaconda.ifcfg.log', 'anaconda.program.log', 'anaconda.log', 'anaconda.storage.log', 'boot.log']
+
+>>> filelist3 = [ i for i in os.listdir('/var/log/') if i.endswith('.log') ]
+
+>>> print(filelist3)
+['yum.log', 'anaconda.yum.log', 'dracut.log', 'anaconda.ifcfg.log', 'anaconda.program.log', 'anaconda.log', 'anaconda.storage.log', 'boot.log']
+    
+    
+示例5：        
+>>> l1 = ['x','y','z']
+
+>>> l2 = [1,2,3]
+
+>>> l3 = [ (i,j) for i in l1 for j in l2 ]
+
+>>> print(l3)
+[('x', 1), ('x', 2), ('x', 3), ('y', 1), ('y', 2), ('y', 3), ('z', 1), ('z', 2), ('z', 3)]
+    
+示例6：            
+>>> l1 = ['x','y','z']
+
+>>> l2 = [1,2,3]
+
+>>> l3 = [ (i,j) for i in l1 for j in l2 if j != 1 ]
+
+>>> print(l3)
+[('x', 2), ('x', 3), ('y', 2), ('y', 3), ('z', 2), ('z', 3)]
+
+生成器表达式
+生成器表达式并不真正创建数字列表，而是返回一个生成器对象，此对象在每次计算出一个条目后，把这个条目“产生”(yield)出来 
+生成器表达式使用了"惰性计算"或称作"延迟求值"的机制
+序列过长，并且每次只需要获取一个元素时，应当考虑使用生成器表达式而不是列表解析
+生成器表达式与python 2.4引入
+
+语法：
+(expr for iter_var in iterable)
+(expr for iter_var in iterable if condition_expr)
+
+
+示例1：    
+>>> g1 = ( i**2 for i in range(1,11))
+>>> next(g1)
+1
+>>> next(g1)
+4
+    
+示例2：    
+>>> for j in ( i**2 for i in range(1,11) ): print(j/2)
