@@ -1,0 +1,525 @@
+Python格式化输出：
+Python的字符串格式化有两种方式: 百分号方式、format方式
+
+百分号的方式相对来说比较老，而format方式则是比较先进的方式，企图替换古老的方式，目前两者并存。[PEP-3101]
+
+(1)百分号格式化
+%[(name)][flags][width][.precision]typecode ....
+(name) 可选，用于选择指定的key
+flags 可选，可供选择的值有:
+　　　　+ 右对齐；正数前加正好，负数前加负号；
+　　　　- 左对齐；正数前无符号，负数前加负号；
+　　　　空格 右对齐；正数前加空格，负数前加负号；
+　　　　0 右对齐；正数前无符号，负数前加负号；用0填充空白处
+
+width 可选，占有宽度
+.precision 可选，小数点后保留的位数
+typecode 必选
+　　　　s，获取传入对象的__str__方法的返回值，并将其格式化到指定位置
+　　　　r，获取传入对象的__repr__方法的返回值，并将其格式化到指定位置
+　　　　c，整数：将数字转换成其unicode对应的值，10进制范围为 0 <= i <= 1114111（py27则只支持0-255）；字符：将字符添加到指定位置
+　　　　o，将整数转换成 八 进制表示，并将其格式化到指定位置
+　　　　x，将整数转换成十六进制表示，并将其格式化到指定位置
+　　　　d，将整数、浮点数转换成 十 进制表示，并将其格式化到指定位置
+　　　　e，将整数、浮点数转换成科学计数法，并将其格式化到指定位置（小写e）
+　　　　E，将整数、浮点数转换成科学计数法，并将其格式化到指定位置（大写E）
+　　　　f， 将整数、浮点数转换成浮点数表示，并将其格式化到指定位置（默认保留小数点后6位）
+　　　　F，同上
+　　　　g，自动调整将整数、浮点数转换成 浮点型或科学计数法表示（超过6位数用科学计数法），并将其格式化到指定位置（如果是科学计数则是e；）
+　　　　G，自动调整将整数、浮点数转换成 浮点型或科学计数法表示（超过6位数用科学计数法），并将其格式化到指定位置（如果是科学计数则是E；）
+　　　　%，当字符串中存在格式化标志时，需要用 %%表示一个百分号
+
+ 
+
+注意：%s, %d, %f这3个是非常常用的,当不确定用%s or %d,最好使用%s不会出错
+
+>>> d = {'x':32,'y':27.49325,'z':65}
+
+>>> print('%(x)-10d %(y)0.3g' % d)
+32 27.5
+一些例子
+
+复制代码
+tpl = "i am %s" % "tomcat"
+ 
+tpl = "i am %s age %d" % ("tomcat", 18)
+ 
+tpl = "i am %(name)s age %(age)d" % {"name": "tomcat", "age": 18}
+ 
+tpl = "percent %.2f" % 99.97623
+ 
+tpl = "i am %(pp).2f" % {"pp": 123.425556, }
+ 
+tpl = "i am %.2f %%" % {"pp": 123.425556, }
+复制代码
+ 
+
+(2)Format()方式：
+[[fill]align][sign][#][0][width][,][.precision][type]
+fill 【可选】空白处填充的字符
+align 【可选】对齐方式（需配合width使用）
+<，内容左对齐
+>，内容右对齐(默认)
+＝，内容右对齐，将符号放置在填充字符的左侧，且只对数字类型有效。 即使：符号+填充物+数字
+^，内容居中
+sign 【可选】有无符号数字
++，正号加正，负号加负；
+-，正号不变，负号加负；
+空格，正号空格，负号加负；
+# 【可选】对于二进制、八进制、十六进制，如果加上#，会显示 0b/0o/0x，否则不显示
+， 【可选】为数字添加分隔符，如：1,000,000
+width 【可选】格式化位所占宽度
+.precision 【可选】小数位保留精度
+type 【可选】格式化类型
+传入” 字符串类型 “的参数
+s，格式化字符串类型数据
+空白，未指定类型，则默认是None，同s
+传入“ 整数类型 ”的参数
+b，将10进制整数自动转换成2进制表示然后格式化
+c，将10进制整数自动转换为其对应的unicode字符
+d，十进制整数
+o，将10进制整数自动转换成8进制表示然后格式化；
+x，将10进制整数自动转换成16进制表示然后格式化（小写x）
+X，将10进制整数自动转换成16进制表示然后格式化（大写X）
+传入“ 浮点型或小数类型 ”的参数
+e， 转换为科学计数法（小写e）表示，然后格式化；
+E， 转换为科学计数法（大写E）表示，然后格式化;
+f ， 转换为浮点型（默认小数点后保留6位）表示，然后格式化；
+F， 转换为浮点型（默认小数点后保留6位）表示，然后格式化；
+g， 自动在e和f中切换
+G， 自动在E和F中切换
+%，显示百分比（默认显示小数点后6位）
+一些例子：
+
+复制代码
+tpl = "i am {}, age {}, {}".format("seven", 18, 'alex')
+  
+tpl = "i am {}, age {}, {}".format(*["seven", 18, 'alex'])
+  
+tpl = "i am {0}, age {1}, really {0}".format("seven", 18)
+  
+tpl = "i am {0}, age {1}, really {0}".format(*["seven", 18])
+  
+tpl = "i am {name}, age {age}, really {name}".format(name="seven", age=18)
+  
+tpl = "i am {name}, age {age}, really {name}".format(**{"name": "seven", "age": 18})
+  
+tpl = "i am {0[0]}, age {0[1]}, really {0[2]}".format([1, 2, 3], [11, 22, 33])
+  
+tpl = "i am {:s}, age {:d}, money {:f}".format("seven", 18, 88888.1)
+  
+tpl = "i am {:s}, age {:d}".format(*["seven", 18])
+  
+tpl = "i am {name:s}, age {age:d}".format(name="seven", age=18)
+  
+tpl = "i am {name:s}, age {age:d}".format(**{"name": "seven", "age": 18})
+ 
+tpl = "numbers: {:b},{:o},{:d},{:x},{:X}, {:%}".format(15, 15, 15, 15, 15, 15.87623, 2)
+ 
+tpl = "numbers: {:b},{:o},{:d},{:x},{:X}, {:%}".format(15, 15, 15, 15, 15, 15.87623, 2)
+ 
+tpl = "numbers: {0:b},{0:o},{0:d},{0:x},{0:X}, {0:%}".format(15)
+ 
+tpl = "numbers: {num:b},{num:o},{num:d},{num:x},{num:X}, {num:%}".format(num=15)
+复制代码
+更多格式化操作：https://docs.python.org/3/library/string.html
+
+ 
+python文件对象
+文件系统和文件：
+　　文件系统是OS用于明确磁盘或分区上的文件的方法和数据结构--即在磁盘上组织文件的方法
+　　计算机文件(或称文件、电脑档案、档案)是存储在某种长期存储设备或临时存储设备中的一段数据流，并且归属于计算机文件系统管理之下
+
+概括来讲：
+　　文件是计算机中由OS管理的具有名字的存储区域
+　　在Linux系统上，文件被看作是字节序列
+
+ 
+
+batyes()这个内置函数,这个方法是将字符串转换为字节类型
+
+复制代码
+# utf-8 一个汉子:3个字节
+# gbk一个汉子:2个字节, 1bytes = 8bit
+# 字符串转换字节类型：bytes(只要转换的字符串,按照什么编码)
+
+s = "李纳斯"
+n = bytes(s,encoding="utf-8")
+print(n)
+n = bytes(s,encoding="gbk")
+print(n)
+
+# 字节转化成字符串
+new_str = str(bytes(s,encoding="utf-8"),encoding="utf-8")
+print(new_str)
+复制代码
+ 
+
+open()内置函数用于文件操作
+
+操作文件时，一般需要经历如下步骤：
+
+打开文件
+操作文件
+关闭文件
+每次都要关闭文件很麻烦，with open('文件路径','模式') as filename: 这种方式来打开文件。
+
+复制代码
+#'r'为只读，'1.txt'为文件路径
+f=open('1.txt','r',encoding='utf-8')  #打开文件
+data=f.read()　　　　　　　　　　　　　　  #操作文件
+f.close()　　　　　　　　　　　　　　　　　 #关闭文件
+print(data)
+ 
+# 用with语句打开，不需要自动关闭
+with open('1.txt','r',encoding='utf-8') as f:
+    print(f.read())
+复制代码
+ 
+
+一、打开文件
+文件句柄 = open(file, mode='r', buffering=-1, encoding=None)
+打开文件时，需要指定文件路径和以何等方式打开文件，打开后，即可获取该文件句柄，日后通过此文件句柄对该文件操作。
+
+打开文件的模式有：
+
+r ，只读模式【默认】
+w，只写模式【不可读；不存在则创建；存在则清空内容；】
+x， 只写模式【不可读；不存在则创建，存在则报错】
+a， 追加模式【可读；   不存在则创建；存在则只追加内容；】
+"+" 表示可以同时读写某个文件
+
+r+， 读写【可读，可写】
+w+，写读【可读，可写】
+x+ ，写读【可读，可写】
+a+， 写读【可读，可写】
+ "b"表示以字节的方式操作
+
+rb  或 r+b
+wb 或 w+b
+xb 或 w+b
+ab 或 a+b
+ 注：以b方式打开时，读取到的内容是字节类型，写入时也需要提供字节类型，当以二进制的方式的效率比较高，因为磁盘底层是以字节存储
+
+二、操作
+对于文件也是个迭代对象,所以循环遍历文件的每一行用的非常多
+
+f = open('/etc/passwd','r')
+for line in f:
+    print(line)
+ 2.x
+ 3.x
+复制代码
+f.close()        关闭文件
+f.fileno（）      返回文件描述符
+f.readline()     从当前指针读取一行
+f.readlines()    从当前指针读取到结尾的全部行
+f.read()         从当前指针读多少个字节,没有参数读取全部
+f.tell()         告诉当前指针，是字节
+f.seek(offset [whence])    移动指针，f.seek(0)把指针移动第一行第0个字节位置
+    offset: 偏移量
+    whence: 位置
+        0: 从文件头
+        1：从当前位置
+        2：从文件尾部
+    
+f.write(string)    打开文件时，文件不存在，r,r+都会报错，其他模式则不会
+f.writelines()     必须是字符串序列，把字符串序列当作一个列表写进文件
+f.flush()          在文件没有关闭时，可以将内存中的数据刷写至磁盘
+f.truncate()       文件截取多少字节保留,指针后面的内容全部会清空
+
+f.name             是返回文件名字，不是方法，是属性    
+f.closed           判断文件是否已经关闭
+f.encoding         查看编码格式，没有使用任何编码，则为None
+f.mode             打开文件的模式
+f.newlines         显示出换行符的，空为默认\n不显示
+复制代码
+一些例子：
+
+复制代码
+#打开模式没有b则打开的字符串
+f  = open('db','r')
+data = f.read()
+print(data,type(data))
+f.close()
+
+#打开模式有b则打开的时字节
+f1  = open('db','rb')
+data = f.read()
+print(data,type(data))
+f.close()
+
+# 打开模式有w和b则写入的字符串需要转换成字节
+f2  = open('db','ab')
+f.write(bytes("hello",encoding="utf-8"))
+f.close()
+
+
+f3  = open('db','a+',encoding="utf-8")
+# 如果打开模式无b,则read,按照字符读取
+data = f3.read(1)
+# tell当前指针所在的位置(字节)
+print(f3.tell())
+# 调整当前指针你的位置(字节),写的话会覆盖原来的
+f3.seek(f3.tell())
+f3.write("777")
+f3.close()
+复制代码
+ 
+
+三、管理上下文
+为了避免打开文件后忘记关闭，可以通过管理上下文，即：
+
+with open('log','r') as f:        
+    ...
+如此方式，当with代码块执行完毕时，内部会自动关闭并释放文件资源。
+
+在Python 2.7 及以后，with又支持同时对多个文件的上下文进行管理，即：
+
+(1)读取一个文件中的10行写入另外一个文件中
+
+复制代码
+with open('db1','r',encoding="utf-8") as f1,open('db2','w',encoding="utf-8") as f2:
+    times = 0
+    for line in f1:
+        times += 1
+        if times <= 10:
+            f2.write(line)
+        else:
+            break
+复制代码
+(2)将一个文件一行一行读取并批量替换并写入另外一个文件
+
+with open('db1','r',encoding="utf-8") as f1,open('db2','w',encoding="utf-8") as f2:
+    for line in f1:
+        new_str = line.replace('ales','st')
+        f2.write(new_str)
+(3)假设现在有这样一个需求，有一个10G大的文件，如何拷贝到另一个文件中去？下面将讲一下如何同时打开两个文件进行处理，以及文件太大的时候如何读取用with语句就可以同时打开两个文件，一个读，一个写。假设1.txt文件有10G大，如果用read则一次性就将内容读到内存中去了，这显然不合适，如果用readline()的话虽然也可以读一行，但是并不知道何时结束，但是可以用for循环读取文件这个可迭代的对象，一行行的读取。下面三行代码就可以实现了
+
+with open('1.txt','r',encoding='utf-8') as fread,open('2.txt','w') as fwrite:
+    for line in fread:　　　　　　　　　　#一行行的读
+        fwrite.write(line)　　　　　　　 #一行行的写
+ 大量练习：
+
+
+复制代码
+示例：    
+>>> import os
+>>> os.system('cp /etc/passwd /tmp/passwd')
+>>> f1 = open('/tmp/passwd','r')
+
+>>> type(f1)
+>>> file
+
+>>> f1.next()
+>>> 'root:x:0:0:root:/root:/bin/bash\n'
+
+
+示例：
+>>> f1 = open('/tmp/passwd','r+')
+
+>>> f1.next()
+'root:x:0:0:root:/root:/bin/bash\n'
+
+>>> f1.seek(0,2)
+
+>>> f1.tell()
+927
+
+>>> f1.write('new line.\n')
+
+>>> f1.tell()
+937
+
+>>> f1.close()
+
+
+示例：带+号可以避免文件不存在报错
+>>> import os
+>>> os.system('cp /etc/shadow /tmp/shadow')
+
+>>> f2 = open('/tmp/shadow','w+')
+
+>>> f2.write('hello')
+
+>>> f2.close()
+
+
+示例：如果是只读，文件不存在则报错
+>>> f3 = open('/tmp/test.txt','r')
+---------------------------------------------------------------------------
+IOError                                   Traceback (most recent call last)
+<ipython-input-12-d21a831010b6> in <module>()
+----> 1 f3 = open('/tmp/test.txt','r')
+
+IOError: [Errno 2] No such file or directory: '/tmp/test.txt'
+
+
+注意：如果文件不存在，r,r+都会报错
+
+
+示例：
+>>> f3 = open('/tmp/test.txt1','w+')
+
+>>> for line in ( i**2 for i in range(1,11) ):
+    f3.write(str(line)+'\n')
+     
+
+>>> f3.flush()
+
+>>> f3.close()
+
+
+示例：
+>>> import os
+
+>>> l2 = os.listdir('/etc/')
+
+>>> f4.writelines(l2)
+
+>>> f4.flush()
+
+示例：
+>>> l3 = [ i+'\n' for i in os.listdir('/etc/') ]
+>>> f4.seek(0)
+>>> f4.writelines(l3)
+>>> f4.flush()
+
+>>> f4.seek(0)
+>>> f4.writelines([ i+'\n' for i in os.listdir('/etc/')])
+>>> f4.flush()
+复制代码
+ 
+
+文件系统功能：import os
+目录相关：
+os.getcwd() 返回当前工作目录
+os.chdir() 切换目录
+os.chroot() 设定当前进程的根目录
+os.listdir() 列出指定目录下的所有文件名
+os.mkdir() 创建指定目录
+os.makedirs() 创建多级目录
+os.rmdir() 删除陌路
+os.removedirs() 删除多级目录
+
+文件相关：
+os.mkfifo() 创建管道文件
+os.mknod() 创建设备文件
+os.remove() 删除文件
+
+os.rename() 文件重命名
+os.stat() 查看文件的状态属性
+
+os.symlink() 创建链接文件
+os.unlink() 删除链接文件	
+
+os.utime() 更新文件时间戳
+os.tmpfile() 创建并打开(w+b)一个新的
+os.walk() 生成目录结构的生成器
+
+访问权限：
+os.access() 检验文件某个用户是否有访问权限
+os.chmod() 修改权限
+os.chown() 修改属主属组
+os.umask() 设置默认权限模式
+
+文件描述符：
+os.open() 根据文件描述打开
+os.read() 根据文件描述读
+os.write() 根据文件描述符写
+
+创建设备：
+os.mkdev() 创建设备文件
+os.major() 获取设备主版本号
+os.minor() 获取设备次版本号
+
+
+用户相关：	
+os.getuid() 获取当前用户的uid
+os.getgid() 获取当前用户的gid
+
+
+文件路径：
+os.path.basename() 路径基名
+os.path.dirname() 路径目录名
+os.path.join() 将dirname()和basename()连接起来
+os.path.split() 返回dirname(),basename()元组
+os.path.splitext() 返回(filename,extension)元组
+
+os.path.getatime()
+os.path.getctime()
+os.path.getmtime()
+os.path.getsize() 返回文件的大小
+
+os.path.exists() 判断指定文件是否存在
+os.path.isabs() 判断指定的路径是否为绝对路径
+os.path.isdir() 判断是否为目录
+os.path.isfile() 判断是否为文件
+os.path.islink() 判断是否为链接文件
+os.path.ismount() 判断是否为挂载点
+os.path.samefile() 判断两个路径是否指向了同一个文件
+对象持久存储：
+　　pickle模块
+　　marshal
+　　
+DMB接口
+shelve模块
+
+
+pickle.dump()
+pickle.load()
+
+复制代码
+示例：
+>>> dir1 = os.path.dirname('/etc/sysconfig/network-scripts')
+
+>>> file1 = os.path.basename('/etc/sysconfig/network-scripts')
+
+>>> print(dir1,file1)
+/etc/sysconfig network-scripts
+
+>>> os.path.join(dir1,file1)
+'/etc/sysconfig/network-scripts'
+
+
+示例：
+>>> for filename in os.listdir('/tmp'):
+        print(os.path.join('/tmp',filename))
+
+
+示例：判断文件是否存在，存在则打开
+让用户通过键盘反复输入多行数据
+追加保存至此文件中
+
+#!/usr/bin/env python27
+
+import os
+import os.path
+
+filename = '/tmp/test2.txt'
+
+if os.path.isfile(filename):
+    f1 = open(filename,'a+')
+
+while True:
+    line = raw_input('Enter somethin> ')
+    if line == 'q' or line == 'quit':
+        break
+    f1.write(line+'\n')
+
+f1.close()
+
+
+示例：将字典写入文件中,并还原
+>>> import pickle
+>>> d1 = {'x':123,'y':567,'z':'hello world'}
+>>> f5 = open('/tmp/dfile.txt','a+')
+>>> pickle.dump(d1,f5)
+>>> f5.flush()
+>>> f5.close()
+
+
+>>> f6 = open('/tmp/dfile.txt','r')
+>>> d2 = pickle.load(f6)
+>>> print(d2)
+{'y': 567, 'x': 123, 'z': 'hello world'}
