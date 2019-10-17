@@ -183,7 +183,9 @@ tomcat@node:~$ python a.py
 注意：python3.x中字符集默认为UTF-8,python2.x还是ASCII所以需要设置#coding:utf-8
 ```
 五、输入、输出、注释
+```
 Python输入：
+
 1、Python3.x提供了一个input()，可以让用户输入字符串。比如输入用户的名字：
 
 python3中格式化输出默认接收的都视为字符串,如果你获取的是要数字类型则需要另外强制转换为int()转换为数字类型才能获得数字
@@ -221,8 +223,6 @@ tomcat@node:~$ python b.py
 123
 注意：在pycharm IDE工具中这段代码是行不通的,在Linux命令行或者Windows cmd中是可以的
 
- 
-
 2、Python2.x提供了一个raw_input()和input(),input()在python2中基本不用忘了吧,当然我这里会演示他们的区别
 
 raw_input()在字符串和数值型都没有问题
@@ -236,6 +236,7 @@ tomcatxiao
 your age is:21
 >>> print age
 21
+
 input()在输入字符串的时候报错,变量未定义,数值型则没有报错,如果是字符串则需要引号'' or ""，或者事先定义变量赋值
 
 >>> name = input("please input your name:")
@@ -272,7 +273,6 @@ print("String %format1 %format2 ...." %(variable1,variable2))
 print  "String"  + variable1
 print("String"  + variable1)
 input()和格式化输出时要特别要注意input()输入是个数字需要int()转换,格式化输出的时候使用%d才不会报错
-
 
 tomcat@node:~$ vi c.py
 #!/usr/bin/env python
@@ -321,7 +321,7 @@ Traceback (most recent call last):
   File "/home/tomcat/PycharmProjects/s13/day01/dsfg.py", line 15, in <module>
     ''' %(name,name,age,job)
 TypeError: %d format: a number is required, not str
- 注释
+注释
 #号可以从一行的任何地方开始
 
 '''''',"""""",三引号用于多行注释
@@ -329,8 +329,7 @@ TypeError: %d format: a number is required, not str
 \,表示续行符 
 
  注意：如果''''''三引号是在一个def 函数或者class 定义类的下方则是对这个函数或者类的说明,可以通过__doc__动态获得文档子串
-
-
+```
 六、模块初识　
 ```
 Python的强大之处在于他有非常丰富和强大的标准库和第三方库，几乎你想实现的任何功能都有相应的Python库支持，以后的课程中会深入讲解常用到的各种库，现在，我们先来象征性的学2个简单的。
@@ -403,8 +402,10 @@ tmpfs               5120        4      5116   1% /run/lock
 tmpfs            4079040        0   4079040   0% /sys/fs/cgroup
 cgmfs                100        0       100   0% /run/cgmanager/fs
 tmpfs             815812       76    815736   1% /run/user/1000
-自己写个补全模块tab.py适合python2.x,python3.5都有自带补全功能
 
+```
+自己写个补全模块tab.py适合python2.x,python3.5都有自带补全功能
+```
 #!/usr/bin/env python 
 # python startup file 
 import sys
@@ -463,6 +464,7 @@ python的比较操作：
 "in" 成员关系测试
 ```
 如何实现比较操作：
+
 python中不同类型的比较方法：
 ```
 (1)数字：通过相对大小进行比较
@@ -694,9 +696,8 @@ zip()函数：并行遍历
        D[k] = v
 >>> D
 ```
-for大量练习:
+for循环练习:
 ```
-for循环练习：
 练习1：逐一分开显示指定字典d1中的所有元素，类似如下;
     k1  v1
     k2  v2
