@@ -46,6 +46,7 @@ Old: print >>sys.stderr, "fatal error"
 New: print("fatal error", file=sys.stderr)
 Old: print (x, y) # prints repr((x, y))
 New: print((x, y)) # Not the same as print(x, y)!
+
 2.python3.x全部字符集都是unicode,而在python2.x中是ascii编码,需要设置#-*- coding:utf-8 -*-,中文才不会乱码
 
 3.python2.x一些库名在python3.x的更改
